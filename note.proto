@@ -1,0 +1,39 @@
+syntax = "proto3";
+option go_package = "github.com/taeho-io/note";
+package note;
+
+service User {
+    rpc Create (CreateRequest) returns (CreateResponse) {}
+    rpc Get (GetRequest) returns (GetResponse) {}
+}
+
+enum BodyType {
+    TEXT = 0;
+    HTML = 1;
+    MARKDOWN = 2;
+}
+
+message CreateRequest {
+    int64 create_by = 1;
+    BodyType body_type = 2;
+    string title = 3;
+    string body = 4;
+}
+
+message CreateResponse {
+    int64 note_id = 1;
+}
+
+message GetRequest {
+    int64 note_id = 1;
+}
+
+message GetResponse {
+    int64 note_id = 1;
+    BodyType body_type = 2;
+    int64 created_by = 3;
+    string title = 4;
+    string body = 5;
+    int64 created_at = 6;
+    int64 updated_at = 7;
+}

@@ -1,0 +1,8 @@
+[psql]
+  dbname    = "${NOTE_POSTGRES_DB_NAME}"
+  schema    = "taeho"
+  host      = "${NOTE_POSTGRES_HOST}"
+  port      = 5432
+  user      = "${NOTE_POSTGRES_USER}"
+  pass      = "${NOTE_POSTGRES_PASSWORD}"
+  whitelist = ["note"]
