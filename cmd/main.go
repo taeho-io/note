@@ -1,6 +1,9 @@
 package main
 
 import (
+	"os"
+	"sync"
+
 	"github.com/sirupsen/logrus"
 	"github.com/taeho-io/note/server"
 )
@@ -8,14 +11,39 @@ import (
 func main() {
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 
-	addr := ":80"
-	log := logrus.WithField("addr", addr)
+	var wg sync.WaitGroup
+	wg.Add(1)
 
-	cfg := server.NewConfig(server.NewSettings())
+	go func() {
+		defer wg.Done()
 
-	log.Info("Starting Note gRPC server")
-	if err := server.Serve(addr, cfg); err != nil {
-		log.Error(err)
-		return
-	}
+		addr := ":80"
+		log := logrus.WithField("addr", addr)
+
+		cfg := server.NewConfig(server.NewSettings())
+
+		log.Info("Starting Note gRPC server")
+		if err := server.Serve(addr, cfg); err != nil {
+			log.Error(err)
+			return
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+
+		addr := ":81"
+		log := logrus.WithField("addr", addr)
+
+		cfg := server.NewConfig(server.NewSettings())
+
+		log.Info("Starting Note gRPC server")
+		if err := server.Serve(addr, cfg); err != nil {
+			log.Error(err)
+			return
+		}
+	}()
+
+	wg.Wait()
+	os.Exit(1)
 }
