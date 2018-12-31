@@ -17,21 +17,28 @@ var (
 	ErrInvalidToken = status.Error(codes.Unauthenticated, "invalid token")
 )
 
-type CreateHandlerFunc func(ctx context.Context, request *note.CreateRequest) (*note.CreateResponse, error)
+type CreateHandlerFunc func(ctx context.Context, req *note.CreateRequest) (*note.CreateResponse, error)
 
 func Create(db *sql.DB, tid id.ID) CreateHandlerFunc {
 	return func(ctx context.Context, req *note.CreateRequest) (*note.CreateResponse, error) {
+		if err := req.Validate(); err != nil {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+
 		claims, err := token.GetClaimsFromMD(ctx)
 		if err != nil {
 			return nil, ErrInvalidToken
 		}
 
+		if claims.UserID != req.CreatedBy {
+			return nil, ErrInvalidToken
+		}
+
 		noteID := tid.Must()
-		userID := claims.UserID
 
 		n := &models.Note{
 			ID:        noteID,
-			CreatedBy: userID,
+			CreatedBy: req.CreatedBy,
 			Title:     req.Title,
 			BodyType:  req.BodyType.String(),
 			Body:      req.Body,

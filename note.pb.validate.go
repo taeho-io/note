@@ -41,9 +41,9 @@ func (m *CreateRequest) Validate() error {
 		return nil
 	}
 
-	if m.GetCreateBy() <= 999 {
+	if m.GetCreatedBy() <= 999 {
 		return CreateRequestValidationError{
-			field:  "CreateBy",
+			field:  "CreatedBy",
 			reason: "value must be greater than 999",
 		}
 	}

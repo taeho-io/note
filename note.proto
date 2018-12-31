@@ -16,7 +16,7 @@ enum BodyType {
 }
 
 message CreateRequest {
-    int64 create_by = 1         [(validate.rules).int64.gt = 999];
+    int64 created_by = 1        [(validate.rules).int64.gt = 999];
     BodyType body_type = 2      [(validate.rules).enum.defined_only = true];
     string title = 3;
     string body = 4;
