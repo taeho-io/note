@@ -2,7 +2,9 @@ syntax = "proto3";
 option go_package = "github.com/taeho-io/note";
 package note;
 
-service User {
+import "github.com/lyft/protoc-gen-validate/validate/validate.proto";
+
+service Note {
     rpc Create (CreateRequest) returns (CreateResponse) {}
     rpc Get (GetRequest) returns (GetResponse) {}
 }
@@ -14,8 +16,8 @@ enum BodyType {
 }
 
 message CreateRequest {
-    int64 create_by = 1;
-    BodyType body_type = 2;
+    int64 create_by = 1         [(validate.rules).int64.gt = 999];
+    BodyType body_type = 2      [(validate.rules).enum.defined_only = true];
     string title = 3;
     string body = 4;
 }
@@ -25,7 +27,7 @@ message CreateResponse {
 }
 
 message GetRequest {
-    int64 note_id = 1;
+    int64 note_id = 1           [(validate.rules).int64.gt = 999];
 }
 
 message GetResponse {

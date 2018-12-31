@@ -1,0 +1,75 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Setup Google Cloud SDK
+          command: |
+            echo ${GCLOUD_AUTH} > ${HOME}/gcp-key.json
+            gcloud --quiet auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud --quiet config set project ${GCP_PROJECT}
+            gcloud --quiet auth configure-docker
+            gcloud --quiet container clusters get-credentials taeho-cluster --zone us-west1-a --project ${GCP_PROJECT}
+      - run:
+          name: Install dependencies
+          command: apt-get -y install gettext-base
+      - run:
+          name: Patch environment variables on k8s.yaml
+          command: envsubst < k8s.yaml > patched_k8s.yaml
+      - run:
+          name: Test k8s (dry-run)
+          command: kubectl apply -n taeho -f patched_k8s.yaml --dry-run
+      - run:
+          name: Build docker image with tests
+          command: docker build --build-arg test=true -t us.gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_SHA1} .
+      - run:
+          name: Push docker image
+          command: docker push us.gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_SHA1}
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - checkout
+      - run:
+          name: Setup Google Cloud SDK
+          command: |
+            echo ${GCLOUD_AUTH} > ${HOME}/gcp-key.json
+            gcloud --quiet auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud --quiet config set project ${GCP_PROJECT}
+            gcloud --quiet auth configure-docker
+            gcloud --quiet container clusters get-credentials taeho-cluster --zone us-west1-a --project ${GCP_PROJECT}
+      - run:
+          name: Install dependencies
+          command: apt-get -y install gettext-base
+      - run:
+          name: Patch environment variables on k8s.yaml
+          command: envsubst < k8s.yaml > patched_k8s.yaml
+      - run:
+          name: Apply to k8s (dry-run)
+          command: kubectl apply -n taeho -f patched_k8s.yaml --dry-run
+      - run:
+          name: Apply to k8s
+          command: kubectl apply -n taeho -f patched_k8s.yaml
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          context: taeho-io
+      - approve:
+          filters:
+            branches:
+              only:
+                - master
+          type: approval
+          requires:
+            - build
+      - deploy:
+          requires:
+            - approve
+          context: taeho-io

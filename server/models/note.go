@@ -22,13 +22,13 @@ import (
 
 // Note is an object representing the database table.
 type Note struct {
-	ID        string    `boil:"id" json:"id" toml:"id" yaml:"id"`
-	CreatedBy string    `boil:"created_by" json:"created_by" toml:"created_by" yaml:"created_by"`
+	ID        int64     `boil:"id" json:"id" toml:"id" yaml:"id"`
+	CreatedBy int64     `boil:"created_by" json:"created_by" toml:"created_by" yaml:"created_by"`
+	BodyType  string    `boil:"body_type" json:"body_type" toml:"body_type" yaml:"body_type"`
 	Title     string    `boil:"title" json:"title" toml:"title" yaml:"title"`
 	Body      string    `boil:"body" json:"body" toml:"body" yaml:"body"`
 	CreatedAt time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	BodyType  string    `boil:"body_type" json:"body_type" toml:"body_type" yaml:"body_type"`
 
 	R *noteR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L noteL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -37,19 +37,19 @@ type Note struct {
 var NoteColumns = struct {
 	ID        string
 	CreatedBy string
+	BodyType  string
 	Title     string
 	Body      string
 	CreatedAt string
 	UpdatedAt string
-	BodyType  string
 }{
 	ID:        "id",
 	CreatedBy: "created_by",
+	BodyType:  "body_type",
 	Title:     "title",
 	Body:      "body",
 	CreatedAt: "created_at",
 	UpdatedAt: "updated_at",
-	BodyType:  "body_type",
 }
 
 // NoteRels is where relationship names are stored.
@@ -69,8 +69,8 @@ func (*noteR) NewStruct() *noteR {
 type noteL struct{}
 
 var (
-	noteColumns               = []string{"id", "created_by", "title", "body", "created_at", "updated_at", "body_type"}
-	noteColumnsWithoutDefault = []string{"id", "created_by", "title", "body", "created_at", "updated_at", "body_type"}
+	noteColumns               = []string{"id", "created_by", "body_type", "title", "body", "created_at", "updated_at"}
+	noteColumnsWithoutDefault = []string{"id", "created_by", "body_type", "title", "body", "created_at", "updated_at"}
 	noteColumnsWithDefault    = []string{}
 	notePrimaryKeyColumns     = []string{"id"}
 )
@@ -319,7 +319,7 @@ func Notes(mods ...qm.QueryMod) noteQuery {
 
 // FindNote retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindNote(ctx context.Context, exec boil.ContextExecutor, iD string, selectCols ...string) (*Note, error) {
+func FindNote(ctx context.Context, exec boil.ContextExecutor, iD int64, selectCols ...string) (*Note, error) {
 	noteObj := &Note{}
 
 	sel := "*"
@@ -834,7 +834,7 @@ func (o *NoteSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) er
 }
 
 // NoteExists checks if the Note row exists.
-func NoteExists(ctx context.Context, exec boil.ContextExecutor, iD string) (bool, error) {
+func NoteExists(ctx context.Context, exec boil.ContextExecutor, iD int64) (bool, error) {
 	var exists bool
 	sql := "select exists(select 1 from \"taeho\".\"note\" where \"id\"=$1 limit 1)"
 
