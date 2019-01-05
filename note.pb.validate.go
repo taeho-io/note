@@ -422,7 +422,12 @@ func (m *ListRequest) Validate() error {
 
 	// no validation rules for Offset
 
-	// no validation rules for Limit
+	if val := m.GetLimit(); val < 0 || val > 50 {
+		return ListRequestValidationError{
+			field:  "Limit",
+			reason: "value must be inside range [0, 50]",
+		}
+	}
 
 	return nil
 }
