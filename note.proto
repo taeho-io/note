@@ -5,8 +5,12 @@ package note;
 import "github.com/lyft/protoc-gen-validate/validate/validate.proto";
 
 service Note {
-    rpc Create (CreateRequest) returns (CreateResponse) {}
-    rpc Get (GetRequest) returns (GetResponse) {}
+    rpc Create (CreateRequest) returns (CreateResponse) {
+    }
+    rpc Get (GetRequest) returns (GetResponse) {
+    }
+    rpc List (ListRequest) returns (ListResponse) {
+    }
 }
 
 enum BodyType {
@@ -16,8 +20,8 @@ enum BodyType {
 }
 
 message CreateRequest {
-    int64 created_by = 1        [(validate.rules).int64.gt = 999];
-    BodyType body_type = 2      [(validate.rules).enum.defined_only = true];
+    int64 created_by = 1 [(validate.rules).int64.gt = 999];
+    BodyType body_type = 2 [(validate.rules).enum.defined_only = true];
     string title = 3;
     string body = 4;
 }
@@ -27,7 +31,7 @@ message CreateResponse {
 }
 
 message GetRequest {
-    int64 note_id = 1           [(validate.rules).int64.gt = 999];
+    int64 note_id = 1 [(validate.rules).int64.gt = 999];
 }
 
 message GetResponse {
@@ -38,4 +42,23 @@ message GetResponse {
     string body = 5;
     int64 created_at = 6;
     int64 updated_at = 7;
+}
+
+message NoteMessage {
+    int64 note_id = 1;
+    BodyType body_type = 2;
+    int64 created_by = 3;
+    string title = 4;
+    string body = 5;
+    int64 created_at = 6;
+    int64 updated_at = 7;
+}
+
+message ListRequest {
+    int64 offset = 1;
+    int64 limit = 2;
+}
+
+message ListResponse {
+    repeated NoteMessage notes = 1;
 }

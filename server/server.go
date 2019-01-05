@@ -97,7 +97,11 @@ func (s *NoteServer) Create(ctx context.Context, req *note.CreateRequest) (*note
 }
 
 func (s *NoteServer) Get(ctx context.Context, req *note.GetRequest) (*note.GetResponse, error) {
-	return handler.Get(s.DB(), s.AuthClient())(ctx, req)
+	return handler.Get(s.DB())(ctx, req)
+}
+
+func (s *NoteServer) List(ctx context.Context, req *note.ListRequest) (*note.ListResponse, error) {
+	return handler.List(s.DB())(ctx, req)
 }
 
 func Serve(addr string, cfg Config) error {

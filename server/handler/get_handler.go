@@ -3,7 +3,6 @@ package handler
 import (
 	"database/sql"
 
-	"github.com/taeho-io/auth"
 	"github.com/taeho-io/auth/pkg/token"
 	"github.com/taeho-io/note"
 	"github.com/taeho-io/note/server/models"
@@ -19,8 +18,14 @@ var (
 
 type GetHandlerFunc func(ctx context.Context, request *note.GetRequest) (*note.GetResponse, error)
 
-func Get(db *sql.DB, authCli auth.AuthClient) GetHandlerFunc {
+func Get(db *sql.DB) GetHandlerFunc {
 	return func(ctx context.Context, req *note.GetRequest) (*note.GetResponse, error) {
+		claims, err := token.GetClaimsFromMD(ctx)
+		if err != nil {
+			return nil, status.Error(codes.Unauthenticated, err.Error())
+		}
+		userID := claims.UserID
+
 		if err := req.Validate(); err != nil {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
 		}
@@ -35,8 +40,7 @@ func Get(db *sql.DB, authCli auth.AuthClient) GetHandlerFunc {
 			return nil, status.Error(codes.Internal, err.Error())
 		}
 
-		claims, _ := token.GetClaimsFromMD(ctx)
-		if claims != nil && claims.UserID != n.CreatedBy {
+		if n.CreatedBy != userID {
 			return nil, ErrNoteNotFound
 		}
 

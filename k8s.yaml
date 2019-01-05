@@ -215,15 +215,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: /note.Note/Create
-      route:
-        - destination:
-            host: note
-            port:
-              number: 81
-    - match:
-        - uri:
-            prefix: /note.Note/Get
+            prefix: /note.Note/
       route:
         - destination:
             host: note
