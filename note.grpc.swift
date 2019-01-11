@@ -24,6 +24,7 @@ import Foundation
 import Dispatch
 import SwiftGRPC
 import SwiftProtobuf
+import RxSwift
 
 internal protocol Note_NoteCreateCall: ClientCallUnary {}
 
@@ -95,6 +96,54 @@ internal final class Note_NoteServiceClient: ServiceClientBase, Note_NoteService
   internal func list(_ request: Note_ListRequest, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall {
     return try Note_NoteListCallBase(channel)
       .start(request: request, metadata: metadata, completion: completion)
+  }
+
+}
+
+internal extension Note_NoteServiceClient {
+  /// RxSwift. Unary.
+  internal func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?) -> Observable<Note_CreateResponse> {
+    return Observable.create { observer in
+      _ = try? Note_NoteCreateCallBase(self.channel)
+        .start(request: request, metadata: customMetadata ?? self.metadata, completion: { resp, result in
+          guard let resp: Note_CreateResponse = resp else {
+            observer.onError(RPCError.callError(result))
+            return
+          }
+          observer.onNext(resp)
+        })
+      return Disposables.create()
+    }
+  }
+
+  /// RxSwift. Unary.
+  internal func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?) -> Observable<Note_GetResponse> {
+    return Observable.create { observer in
+      _ = try? Note_NoteGetCallBase(self.channel)
+        .start(request: request, metadata: customMetadata ?? self.metadata, completion: { resp, result in
+          guard let resp: Note_GetResponse = resp else {
+            observer.onError(RPCError.callError(result))
+            return
+          }
+          observer.onNext(resp)
+        })
+      return Disposables.create()
+    }
+  }
+
+  /// RxSwift. Unary.
+  internal func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?) -> Observable<Note_ListResponse> {
+    return Observable.create { observer in
+      _ = try? Note_NoteListCallBase(self.channel)
+        .start(request: request, metadata: customMetadata ?? self.metadata, completion: { resp, result in
+          guard let resp: Note_ListResponse = resp else {
+            observer.onError(RPCError.callError(result))
+            return
+          }
+          observer.onNext(resp)
+        })
+      return Disposables.create()
+    }
   }
 
 }
