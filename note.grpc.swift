@@ -47,54 +47,84 @@ fileprivate final class Note_NoteListCallBase: ClientCallUnaryBase<Note_ListRequ
 /// Instantiate Note_NoteServiceClient, then call methods of this protocol to make API calls.
 internal protocol Note_NoteService: ServiceClient {
   /// Synchronous. Unary.
-  func create(_ request: Note_CreateRequest) throws -> Note_CreateResponse
+  func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?) throws -> Note_CreateResponse
   /// Asynchronous. Unary.
-  func create(_ request: Note_CreateRequest, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall
+  func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall
 
   /// Synchronous. Unary.
-  func get(_ request: Note_GetRequest) throws -> Note_GetResponse
+  func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?) throws -> Note_GetResponse
   /// Asynchronous. Unary.
-  func get(_ request: Note_GetRequest, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall
+  func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall
 
   /// Synchronous. Unary.
-  func list(_ request: Note_ListRequest) throws -> Note_ListResponse
+  func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?) throws -> Note_ListResponse
   /// Asynchronous. Unary.
-  func list(_ request: Note_ListRequest, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall
+  func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall
+
+}
+
+internal extension Note_NoteService {
+  /// Synchronous. Unary.
+  func create(_ request: Note_CreateRequest) throws -> Note_CreateResponse {
+    return try self.create(request, metadata: self.metadata)
+  }
+  /// Asynchronous. Unary.
+  func create(_ request: Note_CreateRequest, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall {
+    return try self.create(request, metadata: self.metadata, completion: completion)
+  }
+
+  /// Synchronous. Unary.
+  func get(_ request: Note_GetRequest) throws -> Note_GetResponse {
+    return try self.get(request, metadata: self.metadata)
+  }
+  /// Asynchronous. Unary.
+  func get(_ request: Note_GetRequest, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall {
+    return try self.get(request, metadata: self.metadata, completion: completion)
+  }
+
+  /// Synchronous. Unary.
+  func list(_ request: Note_ListRequest) throws -> Note_ListResponse {
+    return try self.list(request, metadata: self.metadata)
+  }
+  /// Asynchronous. Unary.
+  func list(_ request: Note_ListRequest, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall {
+    return try self.list(request, metadata: self.metadata, completion: completion)
+  }
 
 }
 
 internal final class Note_NoteServiceClient: ServiceClientBase, Note_NoteService {
   /// Synchronous. Unary.
-  internal func create(_ request: Note_CreateRequest) throws -> Note_CreateResponse {
+  internal func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?) throws -> Note_CreateResponse {
     return try Note_NoteCreateCallBase(channel)
-      .run(request: request, metadata: metadata)
+      .run(request: request, metadata: customMetadata ?? self.metadata)
   }
   /// Asynchronous. Unary.
-  internal func create(_ request: Note_CreateRequest, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall {
+  internal func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall {
     return try Note_NoteCreateCallBase(channel)
-      .start(request: request, metadata: metadata, completion: completion)
+      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
   }
 
   /// Synchronous. Unary.
-  internal func get(_ request: Note_GetRequest) throws -> Note_GetResponse {
+  internal func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?) throws -> Note_GetResponse {
     return try Note_NoteGetCallBase(channel)
-      .run(request: request, metadata: metadata)
+      .run(request: request, metadata: customMetadata ?? self.metadata)
   }
   /// Asynchronous. Unary.
-  internal func get(_ request: Note_GetRequest, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall {
+  internal func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall {
     return try Note_NoteGetCallBase(channel)
-      .start(request: request, metadata: metadata, completion: completion)
+      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
   }
 
   /// Synchronous. Unary.
-  internal func list(_ request: Note_ListRequest) throws -> Note_ListResponse {
+  internal func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?) throws -> Note_ListResponse {
     return try Note_NoteListCallBase(channel)
-      .run(request: request, metadata: metadata)
+      .run(request: request, metadata: customMetadata ?? self.metadata)
   }
   /// Asynchronous. Unary.
-  internal func list(_ request: Note_ListRequest, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall {
+  internal func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall {
     return try Note_NoteListCallBase(channel)
-      .start(request: request, metadata: metadata, completion: completion)
+      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
   }
 
 }
