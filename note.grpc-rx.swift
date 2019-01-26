@@ -69,5 +69,33 @@ internal extension Note_NoteServiceClient {
     }
   }
 
+  /// RxSwift. Unary.
+  internal func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?) -> Observable<Note_UpdateResponse> {
+    return Observable.create { observer in
+      _ = try? self.update(request, metadata: customMetadata ?? self.metadata, completion: { resp, result in
+        guard let resp: Note_UpdateResponse = resp else {
+          observer.onError(RPCError.callError(result))
+          return
+        }
+        observer.onNext(resp)
+      })
+      return Disposables.create()
+    }
+  }
+
+  /// RxSwift. Unary.
+  internal func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?) -> Observable<Note_DeleteResponse> {
+    return Observable.create { observer in
+      _ = try? self.delete(request, metadata: customMetadata ?? self.metadata, completion: { resp, result in
+        guard let resp: Note_DeleteResponse = resp else {
+          observer.onError(RPCError.callError(result))
+          return
+        }
+        observer.onNext(resp)
+      })
+      return Disposables.create()
+    }
+  }
+
 }
 

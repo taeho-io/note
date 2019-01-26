@@ -104,6 +104,14 @@ func (s *NoteServer) List(ctx context.Context, req *note.ListRequest) (*note.Lis
 	return handler.List(s.DB())(ctx, req)
 }
 
+func (s *NoteServer) Delete(ctx context.Context, req *note.DeleteRequest) (*note.DeleteResponse, error) {
+	return handler.Delete(s.DB())(ctx, req)
+}
+
+func (s *NoteServer) Update(ctx context.Context, req *note.UpdateRequest) (*note.UpdateResponse, error) {
+	return handler.Update(s.DB())(ctx, req)
+}
+
 func Serve(addr string, cfg Config) error {
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {

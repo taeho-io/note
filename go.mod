@@ -10,7 +10,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.3.0
 	github.com/stretchr/testify v1.3.0 // indirect
-	github.com/taeho-io/auth v0.0.0-20190110035753-ac93fd3a837b
+	github.com/taeho-io/auth v0.0.0-20190115020012-b64d3100b741
 	github.com/taeho-io/taeho-go v0.0.0-20181230233140-814f79be3042
 	github.com/volatiletech/inflect v0.0.0-20170731032912-e7201282ae8d // indirect
 	github.com/volatiletech/null v8.0.0+incompatible // indirect

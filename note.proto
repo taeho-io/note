@@ -5,12 +5,11 @@ package note;
 import "github.com/lyft/protoc-gen-validate/validate/validate.proto";
 
 service Note {
-    rpc Create (CreateRequest) returns (CreateResponse) {
-    }
-    rpc Get (GetRequest) returns (GetResponse) {
-    }
-    rpc List (ListRequest) returns (ListResponse) {
-    }
+    rpc Create (CreateRequest) returns (CreateResponse) {}
+    rpc Get (GetRequest) returns (GetResponse) {}
+    rpc List (ListRequest) returns (ListResponse) {}
+    rpc Update (UpdateRequest) returns (UpdateResponse) {}
+    rpc Delete (DeleteRequest) returns (DeleteResponse) {}
 }
 
 enum BodyType {
@@ -61,4 +60,21 @@ message ListRequest {
 
 message ListResponse {
     repeated NoteMessage notes = 1;
+}
+
+message UpdateRequest {
+    int64 note_id = 1;
+    BodyType body_type = 2;
+    string title = 3;
+    string body = 4;
+}
+
+message UpdateResponse {
+}
+
+message DeleteRequest {
+    int64 note_id = 1;
+}
+
+message DeleteResponse {
 }

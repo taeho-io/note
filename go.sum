@@ -69,8 +69,8 @@ github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0Q=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
-github.com/taeho-io/auth v0.0.0-20190110035753-ac93fd3a837b h1:lFtV3YAj9mmfDhX1jA2fZgMB6V/FD/mPUMFiPFx3doY=
-github.com/taeho-io/auth v0.0.0-20190110035753-ac93fd3a837b/go.mod h1:Bvj0f3WiXGZNncpvZp3Dex/xxDazsN99PSTfcZit4gA=
+github.com/taeho-io/auth v0.0.0-20190115020012-b64d3100b741 h1:W6Bwq2KbHxZeUNGe5fUVKNFQfnPxuEei69wv3+PoQPc=
+github.com/taeho-io/auth v0.0.0-20190115020012-b64d3100b741/go.mod h1:Bvj0f3WiXGZNncpvZp3Dex/xxDazsN99PSTfcZit4gA=
 github.com/taeho-io/taeho-go v0.0.0-20181230233140-814f79be3042 h1:Nnchhv5bGkSs3xJOZncxcE1S+F1d46pUVcgj6KsJ8Dc=
 github.com/taeho-io/taeho-go v0.0.0-20181230233140-814f79be3042/go.mod h1:r6XkEYoI6SXWxDgF0Sp9tbmVj6M82lmvKzR92r7czSU=
 github.com/volatiletech/inflect v0.0.0-20170731032912-e7201282ae8d h1:gI4/tqP6lCY5k6Sg+4k9qSoBXmPwG+xXgMpK7jivD4M=

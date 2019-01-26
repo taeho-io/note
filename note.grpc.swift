@@ -24,7 +24,6 @@ import Foundation
 import Dispatch
 import SwiftGRPC
 import SwiftProtobuf
-import RxSwift
 
 internal protocol Note_NoteCreateCall: ClientCallUnary {}
 
@@ -44,6 +43,18 @@ fileprivate final class Note_NoteListCallBase: ClientCallUnaryBase<Note_ListRequ
   override class var method: String { return "/note.Note/List" }
 }
 
+internal protocol Note_NoteUpdateCall: ClientCallUnary {}
+
+fileprivate final class Note_NoteUpdateCallBase: ClientCallUnaryBase<Note_UpdateRequest, Note_UpdateResponse>, Note_NoteUpdateCall {
+  override class var method: String { return "/note.Note/Update" }
+}
+
+internal protocol Note_NoteDeleteCall: ClientCallUnary {}
+
+fileprivate final class Note_NoteDeleteCallBase: ClientCallUnaryBase<Note_DeleteRequest, Note_DeleteResponse>, Note_NoteDeleteCall {
+  override class var method: String { return "/note.Note/Delete" }
+}
+
 
 /// Instantiate Note_NoteServiceClient, then call methods of this protocol to make API calls.
 internal protocol Note_NoteService: ServiceClient {
@@ -61,6 +72,16 @@ internal protocol Note_NoteService: ServiceClient {
   func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?) throws -> Note_ListResponse
   /// Asynchronous. Unary.
   func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall
+
+  /// Synchronous. Unary.
+  func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?) throws -> Note_UpdateResponse
+  /// Asynchronous. Unary.
+  func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_UpdateResponse?, CallResult) -> Void) throws -> Note_NoteUpdateCall
+
+  /// Synchronous. Unary.
+  func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?) throws -> Note_DeleteResponse
+  /// Asynchronous. Unary.
+  func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_DeleteResponse?, CallResult) -> Void) throws -> Note_NoteDeleteCall
 
 }
 
@@ -90,6 +111,24 @@ internal extension Note_NoteService {
   /// Asynchronous. Unary.
   func list(_ request: Note_ListRequest, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall {
     return try self.list(request, metadata: self.metadata, completion: completion)
+  }
+
+  /// Synchronous. Unary.
+  func update(_ request: Note_UpdateRequest) throws -> Note_UpdateResponse {
+    return try self.update(request, metadata: self.metadata)
+  }
+  /// Asynchronous. Unary.
+  func update(_ request: Note_UpdateRequest, completion: @escaping (Note_UpdateResponse?, CallResult) -> Void) throws -> Note_NoteUpdateCall {
+    return try self.update(request, metadata: self.metadata, completion: completion)
+  }
+
+  /// Synchronous. Unary.
+  func delete(_ request: Note_DeleteRequest) throws -> Note_DeleteResponse {
+    return try self.delete(request, metadata: self.metadata)
+  }
+  /// Asynchronous. Unary.
+  func delete(_ request: Note_DeleteRequest, completion: @escaping (Note_DeleteResponse?, CallResult) -> Void) throws -> Note_NoteDeleteCall {
+    return try self.delete(request, metadata: self.metadata, completion: completion)
   }
 
 }
@@ -128,52 +167,26 @@ internal final class Note_NoteServiceClient: ServiceClientBase, Note_NoteService
       .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
   }
 
-}
-
-internal extension Note_NoteServiceClient {
-  /// RxSwift. Unary.
-  internal func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?) -> Observable<Note_CreateResponse> {
-    return Observable.create { observer in
-      _ = try? Note_NoteCreateCallBase(self.channel)
-        .start(request: request, metadata: customMetadata ?? self.metadata, completion: { resp, result in
-          guard let resp: Note_CreateResponse = resp else {
-            observer.onError(RPCError.callError(result))
-            return
-          }
-          observer.onNext(resp)
-        })
-      return Disposables.create()
-    }
+  /// Synchronous. Unary.
+  internal func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?) throws -> Note_UpdateResponse {
+    return try Note_NoteUpdateCallBase(channel)
+      .run(request: request, metadata: customMetadata ?? self.metadata)
+  }
+  /// Asynchronous. Unary.
+  internal func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_UpdateResponse?, CallResult) -> Void) throws -> Note_NoteUpdateCall {
+    return try Note_NoteUpdateCallBase(channel)
+      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
   }
 
-  /// RxSwift. Unary.
-  internal func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?) -> Observable<Note_GetResponse> {
-    return Observable.create { observer in
-      _ = try? Note_NoteGetCallBase(self.channel)
-        .start(request: request, metadata: customMetadata ?? self.metadata, completion: { resp, result in
-          guard let resp: Note_GetResponse = resp else {
-            observer.onError(RPCError.callError(result))
-            return
-          }
-          observer.onNext(resp)
-        })
-      return Disposables.create()
-    }
+  /// Synchronous. Unary.
+  internal func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?) throws -> Note_DeleteResponse {
+    return try Note_NoteDeleteCallBase(channel)
+      .run(request: request, metadata: customMetadata ?? self.metadata)
   }
-
-  /// RxSwift. Unary.
-  internal func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?) -> Observable<Note_ListResponse> {
-    return Observable.create { observer in
-      _ = try? Note_NoteListCallBase(self.channel)
-        .start(request: request, metadata: customMetadata ?? self.metadata, completion: { resp, result in
-          guard let resp: Note_ListResponse = resp else {
-            observer.onError(RPCError.callError(result))
-            return
-          }
-          observer.onNext(resp)
-        })
-      return Disposables.create()
-    }
+  /// Asynchronous. Unary.
+  internal func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_DeleteResponse?, CallResult) -> Void) throws -> Note_NoteDeleteCall {
+    return try Note_NoteDeleteCallBase(channel)
+      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
   }
 
 }
