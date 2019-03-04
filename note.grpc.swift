@@ -59,29 +59,29 @@ fileprivate final class Note_NoteDeleteCallBase: ClientCallUnaryBase<Note_Delete
 /// Instantiate Note_NoteServiceClient, then call methods of this protocol to make API calls.
 internal protocol Note_NoteService: ServiceClient {
   /// Synchronous. Unary.
-  func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?) throws -> Note_CreateResponse
+  func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata) throws -> Note_CreateResponse
   /// Asynchronous. Unary.
-  func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall
+  func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall
 
   /// Synchronous. Unary.
-  func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?) throws -> Note_GetResponse
+  func get(_ request: Note_GetRequest, metadata customMetadata: Metadata) throws -> Note_GetResponse
   /// Asynchronous. Unary.
-  func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall
+  func get(_ request: Note_GetRequest, metadata customMetadata: Metadata, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall
 
   /// Synchronous. Unary.
-  func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?) throws -> Note_ListResponse
+  func list(_ request: Note_ListRequest, metadata customMetadata: Metadata) throws -> Note_ListResponse
   /// Asynchronous. Unary.
-  func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall
+  func list(_ request: Note_ListRequest, metadata customMetadata: Metadata, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall
 
   /// Synchronous. Unary.
-  func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?) throws -> Note_UpdateResponse
+  func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata) throws -> Note_UpdateResponse
   /// Asynchronous. Unary.
-  func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_UpdateResponse?, CallResult) -> Void) throws -> Note_NoteUpdateCall
+  func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata, completion: @escaping (Note_UpdateResponse?, CallResult) -> Void) throws -> Note_NoteUpdateCall
 
   /// Synchronous. Unary.
-  func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?) throws -> Note_DeleteResponse
+  func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata) throws -> Note_DeleteResponse
   /// Asynchronous. Unary.
-  func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_DeleteResponse?, CallResult) -> Void) throws -> Note_NoteDeleteCall
+  func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata, completion: @escaping (Note_DeleteResponse?, CallResult) -> Void) throws -> Note_NoteDeleteCall
 
 }
 
@@ -135,58 +135,58 @@ internal extension Note_NoteService {
 
 internal final class Note_NoteServiceClient: ServiceClientBase, Note_NoteService {
   /// Synchronous. Unary.
-  internal func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?) throws -> Note_CreateResponse {
+  internal func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata) throws -> Note_CreateResponse {
     return try Note_NoteCreateCallBase(channel)
-      .run(request: request, metadata: customMetadata ?? self.metadata)
+      .run(request: request, metadata: customMetadata)
   }
   /// Asynchronous. Unary.
-  internal func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall {
+  internal func create(_ request: Note_CreateRequest, metadata customMetadata: Metadata, completion: @escaping (Note_CreateResponse?, CallResult) -> Void) throws -> Note_NoteCreateCall {
     return try Note_NoteCreateCallBase(channel)
-      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
+      .start(request: request, metadata: customMetadata, completion: completion)
   }
 
   /// Synchronous. Unary.
-  internal func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?) throws -> Note_GetResponse {
+  internal func get(_ request: Note_GetRequest, metadata customMetadata: Metadata) throws -> Note_GetResponse {
     return try Note_NoteGetCallBase(channel)
-      .run(request: request, metadata: customMetadata ?? self.metadata)
+      .run(request: request, metadata: customMetadata)
   }
   /// Asynchronous. Unary.
-  internal func get(_ request: Note_GetRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall {
+  internal func get(_ request: Note_GetRequest, metadata customMetadata: Metadata, completion: @escaping (Note_GetResponse?, CallResult) -> Void) throws -> Note_NoteGetCall {
     return try Note_NoteGetCallBase(channel)
-      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
+      .start(request: request, metadata: customMetadata, completion: completion)
   }
 
   /// Synchronous. Unary.
-  internal func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?) throws -> Note_ListResponse {
+  internal func list(_ request: Note_ListRequest, metadata customMetadata: Metadata) throws -> Note_ListResponse {
     return try Note_NoteListCallBase(channel)
-      .run(request: request, metadata: customMetadata ?? self.metadata)
+      .run(request: request, metadata: customMetadata)
   }
   /// Asynchronous. Unary.
-  internal func list(_ request: Note_ListRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall {
+  internal func list(_ request: Note_ListRequest, metadata customMetadata: Metadata, completion: @escaping (Note_ListResponse?, CallResult) -> Void) throws -> Note_NoteListCall {
     return try Note_NoteListCallBase(channel)
-      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
+      .start(request: request, metadata: customMetadata, completion: completion)
   }
 
   /// Synchronous. Unary.
-  internal func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?) throws -> Note_UpdateResponse {
+  internal func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata) throws -> Note_UpdateResponse {
     return try Note_NoteUpdateCallBase(channel)
-      .run(request: request, metadata: customMetadata ?? self.metadata)
+      .run(request: request, metadata: customMetadata)
   }
   /// Asynchronous. Unary.
-  internal func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_UpdateResponse?, CallResult) -> Void) throws -> Note_NoteUpdateCall {
+  internal func update(_ request: Note_UpdateRequest, metadata customMetadata: Metadata, completion: @escaping (Note_UpdateResponse?, CallResult) -> Void) throws -> Note_NoteUpdateCall {
     return try Note_NoteUpdateCallBase(channel)
-      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
+      .start(request: request, metadata: customMetadata, completion: completion)
   }
 
   /// Synchronous. Unary.
-  internal func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?) throws -> Note_DeleteResponse {
+  internal func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata) throws -> Note_DeleteResponse {
     return try Note_NoteDeleteCallBase(channel)
-      .run(request: request, metadata: customMetadata ?? self.metadata)
+      .run(request: request, metadata: customMetadata)
   }
   /// Asynchronous. Unary.
-  internal func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata?, completion: @escaping (Note_DeleteResponse?, CallResult) -> Void) throws -> Note_NoteDeleteCall {
+  internal func delete(_ request: Note_DeleteRequest, metadata customMetadata: Metadata, completion: @escaping (Note_DeleteResponse?, CallResult) -> Void) throws -> Note_NoteDeleteCall {
     return try Note_NoteDeleteCallBase(channel)
-      .start(request: request, metadata: customMetadata ?? self.metadata, completion: completion)
+      .start(request: request, metadata: customMetadata, completion: completion)
   }
 
 }

@@ -2,11 +2,11 @@ module github.com/taeho-io/note
 
 require (
 	github.com/gofrs/uuid v3.1.0+incompatible // indirect
-	github.com/golang/protobuf v1.2.0
+	github.com/golang/protobuf v1.3.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
 	github.com/grpc-ecosystem/grpc-gateway v1.6.4 // indirect
 	github.com/lib/pq v1.0.0
-	github.com/lyft/protoc-gen-validate v0.0.12
+	github.com/lyft/protoc-gen-validate v0.0.13
 	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.3.0
 	github.com/stretchr/testify v1.3.0 // indirect
