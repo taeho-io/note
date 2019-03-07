@@ -14,7 +14,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/taeho-io/auth"
-	"github.com/taeho-io/note"
+	"github.com/taeho-io/idl/gen/go/note"
 	"github.com/taeho-io/note/server/handler"
 	"github.com/taeho-io/taeho-go/id"
 	"golang.org/x/net/context"
