@@ -3,6 +3,7 @@ package handler
 import (
 	"database/sql"
 
+	"github.com/golang/protobuf/ptypes"
 	"github.com/taeho-io/auth/pkg/token"
 	"github.com/taeho-io/idl/gen/go/note"
 	"github.com/taeho-io/note/server/models"
@@ -14,16 +15,28 @@ import (
 
 type ListHandlerFunc func(ctx context.Context, request *note.ListRequest) (*note.ListResponse, error)
 
-func noteMessageFromModel(n *models.Note) *note.NoteMessage {
-	return &note.NoteMessage{
+func noteMessageFromModel(n *models.Note) (*note.NoteMessage, error) {
+	noteMsg := &note.NoteMessage{
 		NoteId:    n.ID,
 		CreatedBy: n.CreatedBy,
 		Title:     n.Title,
 		BodyType:  note.BodyType(note.BodyType_value[n.BodyType]),
 		Body:      n.Body,
-		CreatedAt: n.CreatedAt.Unix(),
-		UpdatedAt: n.UpdatedAt.Unix(),
 	}
+
+	createdAt, err := ptypes.TimestampProto(n.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+	noteMsg.CreatedAt = createdAt
+
+	updatedAt, err := ptypes.TimestampProto(n.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+	noteMsg.UpdatedAt = updatedAt
+
+	return noteMsg, nil
 }
 
 func List(db *sql.DB) ListHandlerFunc {
@@ -50,7 +63,11 @@ func List(db *sql.DB) ListHandlerFunc {
 
 		var noteMessages []*note.NoteMessage
 		for _, n := range notes {
-			noteMessages = append(noteMessages, noteMessageFromModel(n))
+			noteMsg, err := noteMessageFromModel(n)
+			if err != nil {
+				return nil, err
+			}
+			noteMessages = append(noteMessages, noteMsg)
 		}
 
 		return &note.ListResponse{

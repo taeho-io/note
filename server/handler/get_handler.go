@@ -3,6 +3,7 @@ package handler
 import (
 	"database/sql"
 
+	"github.com/golang/protobuf/ptypes"
 	"github.com/taeho-io/auth/pkg/token"
 	"github.com/taeho-io/idl/gen/go/note"
 	"github.com/taeho-io/note/server/models"
@@ -43,14 +44,26 @@ func Get(db *sql.DB) GetHandlerFunc {
 			return nil, ErrNoteNotFound
 		}
 
-		return &note.GetResponse{
+		resp := &note.GetResponse{
 			NoteId:    n.ID,
 			CreatedBy: n.CreatedBy,
 			Title:     n.Title,
 			BodyType:  note.BodyType(note.BodyType_value[n.BodyType]),
 			Body:      n.Body,
-			CreatedAt: n.CreatedAt.Unix(),
-			UpdatedAt: n.UpdatedAt.Unix(),
-		}, nil
+		}
+
+		createdAt, err := ptypes.TimestampProto(n.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		resp.CreatedAt = createdAt
+
+		updatedAt, err := ptypes.TimestampProto(n.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		resp.UpdatedAt = updatedAt
+
+		return resp, nil
 	}
 }
