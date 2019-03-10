@@ -17,12 +17,13 @@ import (
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries"
 	"github.com/volatiletech/sqlboiler/queries/qm"
+	"github.com/volatiletech/sqlboiler/queries/qmhelper"
 	"github.com/volatiletech/sqlboiler/strmangle"
 )
 
 // Note is an object representing the database table.
 type Note struct {
-	ID        int64     `boil:"id" json:"id" toml:"id" yaml:"id"`
+	ID        string    `boil:"id" json:"id" toml:"id" yaml:"id"`
 	CreatedBy int64     `boil:"created_by" json:"created_by" toml:"created_by" yaml:"created_by"`
 	BodyType  string    `boil:"body_type" json:"body_type" toml:"body_type" yaml:"body_type"`
 	Title     string    `boil:"title" json:"title" toml:"title" yaml:"title"`
@@ -50,6 +51,65 @@ var NoteColumns = struct {
 	Body:      "body",
 	CreatedAt: "created_at",
 	UpdatedAt: "updated_at",
+}
+
+// Generated where
+
+type whereHelperstring struct{ field string }
+
+func (w whereHelperstring) EQ(x string) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
+func (w whereHelperstring) NEQ(x string) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
+func (w whereHelperstring) LT(x string) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
+func (w whereHelperstring) LTE(x string) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
+func (w whereHelperstring) GT(x string) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
+func (w whereHelperstring) GTE(x string) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
+
+type whereHelperint64 struct{ field string }
+
+func (w whereHelperint64) EQ(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
+func (w whereHelperint64) NEQ(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
+func (w whereHelperint64) LT(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
+func (w whereHelperint64) LTE(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
+func (w whereHelperint64) GT(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
+func (w whereHelperint64) GTE(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
+
+type whereHelpertime_Time struct{ field string }
+
+func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelpertime_Time) NEQ(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelpertime_Time) LT(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpertime_Time) LTE(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpertime_Time) GT(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
+var NoteWhere = struct {
+	ID        whereHelperstring
+	CreatedBy whereHelperint64
+	BodyType  whereHelperstring
+	Title     whereHelperstring
+	Body      whereHelperstring
+	CreatedAt whereHelpertime_Time
+	UpdatedAt whereHelpertime_Time
+}{
+	ID:        whereHelperstring{field: `id`},
+	CreatedBy: whereHelperint64{field: `created_by`},
+	BodyType:  whereHelperstring{field: `body_type`},
+	Title:     whereHelperstring{field: `title`},
+	Body:      whereHelperstring{field: `body`},
+	CreatedAt: whereHelpertime_Time{field: `created_at`},
+	UpdatedAt: whereHelpertime_Time{field: `updated_at`},
 }
 
 // NoteRels is where relationship names are stored.
@@ -103,6 +163,9 @@ var (
 var (
 	// Force time package dependency for automated UpdatedAt/CreatedAt.
 	_ = time.Second
+	// Force qmhelper dependency for where clause generation (which doesn't
+	// always happen)
+	_ = qmhelper.Where
 )
 
 var noteBeforeInsertHooks []NoteHook
@@ -118,6 +181,10 @@ var noteAfterUpsertHooks []NoteHook
 
 // doBeforeInsertHooks executes all "before insert" hooks.
 func (o *Note) doBeforeInsertHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteBeforeInsertHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -129,6 +196,10 @@ func (o *Note) doBeforeInsertHooks(ctx context.Context, exec boil.ContextExecuto
 
 // doBeforeUpdateHooks executes all "before Update" hooks.
 func (o *Note) doBeforeUpdateHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteBeforeUpdateHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -140,6 +211,10 @@ func (o *Note) doBeforeUpdateHooks(ctx context.Context, exec boil.ContextExecuto
 
 // doBeforeDeleteHooks executes all "before Delete" hooks.
 func (o *Note) doBeforeDeleteHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteBeforeDeleteHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -151,6 +226,10 @@ func (o *Note) doBeforeDeleteHooks(ctx context.Context, exec boil.ContextExecuto
 
 // doBeforeUpsertHooks executes all "before Upsert" hooks.
 func (o *Note) doBeforeUpsertHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteBeforeUpsertHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -162,6 +241,10 @@ func (o *Note) doBeforeUpsertHooks(ctx context.Context, exec boil.ContextExecuto
 
 // doAfterInsertHooks executes all "after Insert" hooks.
 func (o *Note) doAfterInsertHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteAfterInsertHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -173,6 +256,10 @@ func (o *Note) doAfterInsertHooks(ctx context.Context, exec boil.ContextExecutor
 
 // doAfterSelectHooks executes all "after Select" hooks.
 func (o *Note) doAfterSelectHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteAfterSelectHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -184,6 +271,10 @@ func (o *Note) doAfterSelectHooks(ctx context.Context, exec boil.ContextExecutor
 
 // doAfterUpdateHooks executes all "after Update" hooks.
 func (o *Note) doAfterUpdateHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteAfterUpdateHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -195,6 +286,10 @@ func (o *Note) doAfterUpdateHooks(ctx context.Context, exec boil.ContextExecutor
 
 // doAfterDeleteHooks executes all "after Delete" hooks.
 func (o *Note) doAfterDeleteHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteAfterDeleteHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -206,6 +301,10 @@ func (o *Note) doAfterDeleteHooks(ctx context.Context, exec boil.ContextExecutor
 
 // doAfterUpsertHooks executes all "after Upsert" hooks.
 func (o *Note) doAfterUpsertHooks(ctx context.Context, exec boil.ContextExecutor) (err error) {
+	if boil.HooksAreSkipped(ctx) {
+		return nil
+	}
+
 	for _, hook := range noteAfterUpsertHooks {
 		if err := hook(ctx, exec, o); err != nil {
 			return err
@@ -319,7 +418,7 @@ func Notes(mods ...qm.QueryMod) noteQuery {
 
 // FindNote retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindNote(ctx context.Context, exec boil.ContextExecutor, iD int64, selectCols ...string) (*Note, error) {
+func FindNote(ctx context.Context, exec boil.ContextExecutor, iD string, selectCols ...string) (*Note, error) {
 	noteObj := &Note{}
 
 	sel := "*"
@@ -351,13 +450,15 @@ func (o *Note) Insert(ctx context.Context, exec boil.ContextExecutor, columns bo
 	}
 
 	var err error
-	currTime := time.Now().In(boil.GetLocation())
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
 
-	if o.CreatedAt.IsZero() {
-		o.CreatedAt = currTime
-	}
-	if o.UpdatedAt.IsZero() {
-		o.UpdatedAt = currTime
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
 	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
@@ -433,9 +534,11 @@ func (o *Note) Insert(ctx context.Context, exec boil.ContextExecutor, columns bo
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *Note) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
-	currTime := time.Now().In(boil.GetLocation())
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
 
-	o.UpdatedAt = currTime
+		o.UpdatedAt = currTime
+	}
 
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
@@ -567,12 +670,14 @@ func (o *Note) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnCo
 	if o == nil {
 		return errors.New("models: no note provided for upsert")
 	}
-	currTime := time.Now().In(boil.GetLocation())
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
 
-	if o.CreatedAt.IsZero() {
-		o.CreatedAt = currTime
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
-	o.UpdatedAt = currTime
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {
 		return err
@@ -626,7 +731,7 @@ func (o *Note) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnCo
 			notePrimaryKeyColumns,
 		)
 
-		if len(update) == 0 {
+		if updateOnConflict && len(update) == 0 {
 			return errors.New("models: unable to upsert note, could not build update column list")
 		}
 
@@ -834,7 +939,7 @@ func (o *NoteSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) er
 }
 
 // NoteExists checks if the Note row exists.
-func NoteExists(ctx context.Context, exec boil.ContextExecutor, iD int64) (bool, error) {
+func NoteExists(ctx context.Context, exec boil.ContextExecutor, iD string) (bool, error) {
 	var exists bool
 	sql := "select exists(select 1 from \"taeho\".\"note\" where \"id\"=$1 limit 1)"
 

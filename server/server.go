@@ -93,7 +93,7 @@ func (s *NoteServer) RegisterServer(srv *grpc.Server) {
 }
 
 func (s *NoteServer) Create(ctx context.Context, req *note.CreateRequest) (*note.CreateResponse, error) {
-	return handler.Create(s.DB(), s.ID())(ctx, req)
+	return handler.Create(s.DB())(ctx, req)
 }
 
 func (s *NoteServer) Get(ctx context.Context, req *note.GetRequest) (*note.GetResponse, error) {
