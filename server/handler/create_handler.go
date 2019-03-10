@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/taeho-io/auth/pkg/token"
@@ -13,8 +14,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const (
+	idxNoteUniqueViolation = `duplicate key value violates unique constraint "note_pkey"`
+)
+
 var (
-	ErrInvalidToken = status.Error(codes.Unauthenticated, "invalid token")
+	ErrNoteAlreadyExists = status.Error(codes.AlreadyExists, "note already exists")
+	ErrInvalidToken      = status.Error(codes.Unauthenticated, "invalid token")
 )
 
 type CreateHandlerFunc func(ctx context.Context, req *note.CreateRequest) (*note.CreateResponse, error)
@@ -56,6 +62,9 @@ func Create(db *sql.DB) CreateHandlerFunc {
 		n.UpdatedAt = updatedAt
 
 		if err := n.Insert(ctx, db, boil.Infer()); err != nil {
+			if strings.Contains(err.Error(), idxNoteUniqueViolation) {
+				return nil, ErrNoteAlreadyExists
+			}
 			return nil, status.Error(codes.Internal, err.Error())
 		}
 
